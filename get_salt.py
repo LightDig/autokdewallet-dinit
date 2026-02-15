@@ -1,10 +1,12 @@
+"""get salt from KWallet's `kdewallet` library"""
+
 from pathlib import Path
 
 # Default salt path of KWallet's `kdewallet` library
 KWALLET_DEFAULT_SALT_PATH: Path = Path.home() / ".local/share/kwalletd/kdewallet.salt"
 
 
-def load_binary_salt(salt_path: Path = KWALLET_DEFAULT_SALT_PATH):
+def load_binary_salt(salt_path: Path = KWALLET_DEFAULT_SALT_PATH) -> bytes:
     """Read the 56-byte binary salt from the KWallet library"""
     if not salt_path.exists():
         raise FileNotFoundError(f"Salt file not found: {salt_path}")

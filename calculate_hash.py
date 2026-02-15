@@ -9,7 +9,7 @@ KEY_SIZE = 56
 HASH_ALGO = "sha512"
 
 
-def get_tpm_password(cred_file="message.cred"):
+def get_tpm_password(cred_file="message.cred") -> bytes:
     """use systemd-creds to decrypt the password from the TPM"""
 
     result = subprocess.run(
@@ -19,7 +19,7 @@ def get_tpm_password(cred_file="message.cred"):
     return result.stdout.strip()
 
 
-def derive_kwallet_hash(password: bytes, salt: bytes):
+def derive_kwallet_hash(password: bytes, salt: bytes) -> bytes:
     """Calculate the PBKDF2-SHA512 hash compatible with KWallet PAM interface"""
     return hashlib.pbkdf2_hmac(HASH_ALGO, password, salt, ITERATIONS, KEY_SIZE)
 
