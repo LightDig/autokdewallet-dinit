@@ -1,0 +1,17 @@
+[Unit]
+Description=Unlock KWallet automatically using TPM credentials
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+# %h means home directory
+WorkingDirectory=%h/autokdewallet
+# LoadCredentialEncrypted=password:%h/autokdewallet/password.cred
+ExecStart=/usr/bin/python %h/autokdewallet/unlock.py
+# 失败时重试一次（防止 D-Bus 响应过慢）
+Restart=on-failure
+RestartSec=2
+
+[Install]
+# start after graphical session
+WantedBy=graphical-session.target
