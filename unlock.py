@@ -3,9 +3,10 @@
 import dbus
 from get_salt import load_binary_salt
 from calculate_hash import derive_kwallet_hash, get_tpm_password
+from pathlib import Path
 
 SALT = load_binary_salt()
-PASSWORD = get_tpm_password("message.cred")
+PASSWORD = get_tpm_password(Path(__file__).parent / "password.cred")
 
 hash = derive_kwallet_hash(PASSWORD, SALT)
 
@@ -42,5 +43,5 @@ def pam_open_wallet(
 
 
 if __name__ == "__main__":
-    print(f"Hash: {hash.hex()}")
+    # print(f"Hash: {hash.hex()}") # disable for security reasons
     pam_open_wallet(hash)

@@ -1,4 +1,6 @@
 import hashlib
+import os
+from pathlib import Path
 import subprocess
 from get_salt import load_binary_salt
 
@@ -9,11 +11,23 @@ KEY_SIZE = 56
 HASH_ALGO = "sha512"
 
 
-def get_tpm_password(cred_file="message.cred") -> bytes:
-    """use systemd-creds to decrypt the password from the TPM"""
+def get_tpm_password(
+    cred_file: str | Path = Path(__file__).parent / "password.cred",
+) -> bytes:
+    """Read password from systemd credentials or decrypt from TPM manually"""
 
+    # Check if systemd has already decrypted the credential for us
+    creds_dir = os.environ.get("CREDENTIALS_DIRECTORY")
+    if creds_dir:
+        cred_path = Path(creds_dir) / "password"
+        if cred_path.exists():
+            return cred_path.read_bytes().strip()
+
+    # Fallback to manual decryption
     result = subprocess.run(
-        ["systemd-creds", "decrypt", cred_file, "-"], capture_output=True, check=True
+        ["systemd-creds", "decrypt", "--user", cred_file, "-"],
+        capture_output=True,
+        check=True,
     )
     # Remove the trailing newline character and return bytes
     return result.stdout.strip()
@@ -30,7 +44,7 @@ if __name__ == "__main__":
         current_salt = load_binary_salt()
 
         # Get the password from the TPM
-        password_plain = get_tpm_password("message.cred")
+        password_plain = get_tpm_password()
 
         hash = derive_kwallet_hash(password_plain, current_salt)
 
