@@ -16,7 +16,7 @@ def get_tpm_password(
 ) -> bytes:
     """Read password from systemd credentials or decrypt from TPM manually"""
 
-    # Check if systemd has already decrypted the credential for us
+    # Check if systemd has already decrypted the credential when `SetCredentialEncrypted` is used
     creds_dir = os.environ.get("CREDENTIALS_DIRECTORY")
     if creds_dir:
         cred_path = Path(creds_dir) / "password"

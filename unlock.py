@@ -17,7 +17,7 @@ def pam_open_wallet(
     """
     Unlock kwallet with D-Bus's pamOpen() method
 
-    method Q_NOREPLY void org.kde.KWallet.pamOpen(QString wallet, QByteArray passwordHash, int sessionTimeout)
+	method Q_NOREPLY: void org.kde.KWallet.pamOpen(QString wallet, QByteArray passwordHash, int sessionTimeout)
 
     Args:
         wallet_name: Wallet name

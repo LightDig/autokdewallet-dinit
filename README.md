@@ -24,21 +24,23 @@ It eliminates the need to manually enter your wallet password every time you log
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/autokdewallet.git
+git clone https://github.com/Himalian/autokdewallet.git
 cd autokdewallet
 ```
 use `just -l` to see all available commands.
 ```bash
-just -l
+> just -l
 Available recipes:
     all
     clean
+    enable                        # enable systemd service(user scope)
     generate_password password="" # use systemd-creds to generate password.cred
     install                       # install systemd service(user scope)
     run
+    setup                         # install and enable service
 ```
 ### 2. Generate Encrypted Credentials
-You need to encrypt your KWallet password. Replace `YOUR_KWALLET_PASSWORD` with your real wallet password.
+You need to encrypt your KWallet password use `systemd-creds`. Replace `YOUR_KWALLET_PASSWORD` with your real wallet password.
 
 Using `just`:
 ```bash
@@ -50,14 +52,14 @@ Or manually:
 echo -n "YOUR_KWALLET_PASSWORD" | systemd-creds encrypt --user - password.cred
 ```
 
-> **Note**: This creates a `password.cred` file. This file is encrypted and bound to your TPM and user. It cannot be used on another machine.
+> **Note**: This creates a `password.cred` file, which is encrypted and bound to your TPM and user. It cannot be used on another machine.
 
 ### 3. Install the Service
 This installs the systemd service to `~/.config/systemd/user/` and enables it.
 
 Using `just`:
 ```bash
-just install
+just setup
 ```
 
 Or manually:
@@ -70,7 +72,7 @@ systemctl --user enable --now kwallet_auto_unlock.service
 
 ## Usage
 
-Once installed, the service will run automatically every time you log in. You should no longer be prompted for your KWallet password.
+Make sure kwallet's pam moudle is disabled, otherwise pam will conflit with this project. Once installed, the service will run automatically every time you log in. You should no longer be prompted for your KWallet password.
 
 ### Manual Testing
 You can run the unlock script manually to verify it works:
@@ -100,7 +102,7 @@ If your wallet does not unlock automatically:
     journalctl --user -u kwallet_auto_unlock.service
     ```
 3.  **Verify TPM/Credentials**:
-    Try decrypting the credential manually to ensure `systemd-creds` is working:
+    Try decrypting the credential manually to ensure `systemd-creds` is working and the password is correct:
     ```bash
     systemd-creds decrypt --user password.cred -
     ```
