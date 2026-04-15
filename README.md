@@ -43,14 +43,14 @@ use `just -l` to see all available commands.
 Available recipes:
     all
     clean
-    enable                        # enable systemd service (user scope)
+    enable                        # enable dinit service (user scope)
     generate_password password="" # use clevis to generate password.cred
     install                       # install dinit service (user scope)
     run
     setup                         # install and enable service
 ```
 ### 2. Generate Encrypted Credentials
-You need to encrypt your KWallet password use `systemd-creds`. Replace `YOUR_KWALLET_PASSWORD` with your real wallet password.
+You need to encrypt your KWallet password use `clevis`. Replace `YOUR_KWALLET_PASSWORD` with your real wallet password.
 
 Using `just`:
 ```bash
@@ -116,7 +116,7 @@ If your wallet does not unlock automatically:
     sed -Ei 's/^(logfile)/# \1/' $HOME/.config/dinit.d/kwallet_auto_unlock
     ```
 3.  **Verify TPM/Credentials**:
-    Try decrypting the credential manually to ensure `systemd-creds` is working
+    Try decrypting the credential manually to ensure `clevis` is working
     and the password is correct:
     ```bash
     clevis decrypt < password.cred
