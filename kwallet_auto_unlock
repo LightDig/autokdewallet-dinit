@@ -1,0 +1,7 @@
+# autokdewallet dinit service
+type = scripted
+command = /usr/bin/python3 $HOME/.config/autokdewallet-dinit/unlock.py
+working-dir = $HOME/.config/autokdewallet-dinit/
+restart = false
+depends-on = dbus
+# logfile = $HOME/.config/autokdewallet-dinit/autokdewallet.log

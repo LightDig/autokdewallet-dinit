@@ -37,7 +37,7 @@ def pam_open_wallet(
         print(f"Successfully sent unlock signal to wallet: {wallet_name}")
         return True
     except dbus.DBusException as e:
-        print(f"Faile to call D-Bus: {e}")
+        print(f"Failed to call D-Bus: {e}")
         return False
 
 
